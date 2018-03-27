@@ -87,14 +87,14 @@ public class HashSetDemo {
         System.out.println("查看重复元素：" + set);
 
         // todo 删除重复元素，只有一个元素被删除
-        set.remove(new R(-3));
+        set.remove(new R1(-3));
         System.out.println("查看删除后的元素：" + set);
 
         // todo 检查是否存在元素，结果为false
-        System.out.println("检查指定元素-3是否存在: " + set.contains(new R(-3)));
+        System.out.println("检查指定元素-3是否存在: " + set.contains(new R1(-3)));
 
         // false
-        System.out.println("检查指定元素-2是否存在: " + set.contains(new R(-2)));
+        System.out.println("检查指定元素-2是否存在: " + set.contains(new R1(-2)));
     }
 }
 
@@ -162,8 +162,8 @@ class R1 {
         if (this == obj) {
             return true;
         }
-        if (obj != null && obj.getClass() == R.class) {
-            R r = (R)obj;
+        if (obj != null && obj.getClass() == R1.class) {
+            R1 r = (R1)obj;
             return r.count == this.count;
         }
 
