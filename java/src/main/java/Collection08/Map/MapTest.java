@@ -2,6 +2,9 @@ package Collection08.Map;
 
 import java.util.*;
 
+/**
+ * java集合使用泛型
+ */
 public class MapTest {
 
     public static void main(String[] args) {
