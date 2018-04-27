@@ -133,6 +133,9 @@ class Person
     public String name;
     public int age;
 
+	/**
+	 * info
+	 */
     public void info()
     {
         System.out.printf("我的姓名: %s, 我的年龄: %d\n", this.name, this.age);
