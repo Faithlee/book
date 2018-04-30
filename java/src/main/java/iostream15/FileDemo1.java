@@ -6,7 +6,19 @@ import java.io.IOException;
 
 public class FileDemo1 {
 
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws Exception
+    {
+        FileDemo1 file = new FileDemo1();
+        file.baseTest();
+
+        // list()：过滤符合条件的文件
+        file.fileFilterTest();
+    }
+
+    /**
+     * File类基本操作
+     */
+    public void baseTest() throws IOException
     {
         // 以当前路径创建File对象(处理目录或文件)
         File file = new File(".");
@@ -51,6 +63,23 @@ public class FileDemo1 {
         System.out.println("========系统根路径下的所有文件===========");
         for (File root : roots) {
             System.out.println(root);
+        }
+    }
+
+    /**
+     * 文件过滤器
+     */
+    public void fileFilterTest()
+    {
+        System.out.println("---------------分割线-----------");
+
+        // list()接收FilenameFilter的函数式接口，支持过滤符合条件的文件
+        File file = new File(".");
+
+        String[] fileList = file.list((dir, name) -> name.endsWith(".java") || new File(name).isDirectory());
+
+        for (String fileName : fileList) {
+            System.out.println(fileName);
         }
     }
 }
