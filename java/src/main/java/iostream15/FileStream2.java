@@ -83,7 +83,7 @@ public class FileStream2 {
      */
     public void outputStreamTest() throws IOException
     {
-        System.out.println("-------------分割线--------------");
+        System.out.println("-------------我是分割线--------------");
 
         // 输出流FileOutputStream
 
