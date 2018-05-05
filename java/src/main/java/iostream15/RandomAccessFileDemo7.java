@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * 任意访问文件操作
  */
-public class RandomAccessFileDemo {
+public class RandomAccessFileDemo7 {
 
     public static void main(String[] args) throws Exception
     {
@@ -16,7 +16,7 @@ public class RandomAccessFileDemo {
         // 操作文件指针方法：getFilePointer()/seek()
         // 读写方法与stream的相同, read/write
 
-        RandomAccessFileDemo accessFileDemo = new RandomAccessFileDemo();
+        RandomAccessFileDemo7 accessFileDemo = new RandomAccessFileDemo7();
 
         // 基本操作
         accessFileDemo.baseTest();
@@ -33,7 +33,7 @@ public class RandomAccessFileDemo {
      */
     public void baseTest()
     {
-        String file = "./src/main/java/iostream15/RandomAccessFileDemo.java";
+        String file = "./src/main/java/iostream15/RandomAccessFileDemo7.java";
 
         try (
                 // 以只读的方式打开文件
