@@ -66,9 +66,10 @@ public class ProcessDemo6 {
         Process process = Runtime.getRuntime().exec("java iostream15.ReadStandard");
 
         try (
-                // todo 将本程序的输出流，作为子进程的输入流
-                // process的输出流对本程序是输出流，对process进程是输入流
-                PrintStream stream = new PrintStream(process.getOutputStream());
+            // todo 将本程序的输出流，作为子进程的输入流
+            // process的输出流对本程序是输出流，对process进程是输入流
+            PrintStream stream = new PrintStream(process.getOutputStream());
+            // todo * 执行结果无效？无法输入到子进程中???
         ) {
             stream.println("普通字符串");
             stream.println(new ProcessDemo6());
