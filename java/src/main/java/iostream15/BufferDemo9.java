@@ -33,13 +33,13 @@ public class BufferDemo9 {
         //buffer.bufferTest();
 
         // 2. Channel的创建
-//        buffer.channelTest();
+        buffer.channelTest();
         // todo 会导致线程stuck，原因不明白？
         // 产生的stuck进程无法杀掉
         //buffer.createChannelTest();
 
         // channel.read
-        buffer.channelReadTest();
+//        buffer.channelReadTest();
     }
 
     /**
@@ -155,7 +155,7 @@ public class BufferDemo9 {
     {
         System.out.println("-----------我是分割线----------");
 
-        // todo 如果设置txt格式的文件无法追加? 什么原因？
+        // todo ??? Channel的write方法会产生stuck进程？
         File file = new File("channel.txt");
 //        File file = new File("src/main/java/iostream15/BufferDemo9.java");
 
@@ -163,13 +163,14 @@ public class BufferDemo9 {
             RandomAccessFile accessFile = new RandomAccessFile(file, "rw");
             FileChannel channel = accessFile.getChannel();
         ) {
-            ByteBuffer buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, file.length());
+            ByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
 
             // todo 使用Channel的记录指针
             channel.position(file.length());
 
             // todo 将Buffer中的数据输出追加到文件末尾
-            channel.write(buffer);
+            // todo ??? 此操作会引起进程stuck
+            // channel.write(buffer);
 
             // 将字节转为字符
             Charset charset = Charset.forName("UTF8");
@@ -182,6 +183,7 @@ public class BufferDemo9 {
 
     /**
      * Channel重复读取
+     * ??? 存在问题
      */
     public void channelReadTest()
     {
@@ -196,8 +198,7 @@ public class BufferDemo9 {
             FileInputStream stream = new FileInputStream(file);
             FileChannel channel = stream.getChannel();
         ) {
-            /*
-            // todo * 为什么分配更小容量时抛异常？
+            // todo ??? 为什么分配更小容量时抛异常？
 //            ByteBuffer buffer = ByteBuffer.allocate(64);
             ByteBuffer buffer = ByteBuffer.allocate(256);
 
@@ -212,8 +213,10 @@ public class BufferDemo9 {
                 // 重置Buffer，为下一次数据做准备
                 buffer.clear();
             }
+            /*
             */
 
+            /*
             ByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
             buffer.flip();
 
@@ -225,7 +228,6 @@ public class BufferDemo9 {
             CharsetDecoder decoder = charset.newDecoder();
             CharBuffer charBuffer = decoder.decode(buffer);
             System.out.println(charBuffer);
-            /*
             */
         } catch (IOException ex) {
             ex.printStackTrace();
