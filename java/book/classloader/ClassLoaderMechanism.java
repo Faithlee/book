@@ -18,6 +18,7 @@ public class ClassLoaderMechanism {
         // 根类加载器加载核心类库
         BootstrapClassLoader.loadCoreLibrary();
 
+        System.out.println("类加载器层次结构：");
         ClassLoaderProp.load();
     }
 }
@@ -41,16 +42,31 @@ class BootstrapClassLoader {
     }
 }
 
-
+/**
+ * 类加载器层次结构
+ *
+ * 类加载器以双亲委派的模式实现的，优先使用父类加载器增加了安全保障
+ */
 class ClassLoaderProp {
 
     public static void load() throws Exception {
         ClassLoader systemLoader = ClassLoader.getSystemClassLoader();
         System.out.println("" +systemLoader);
 
+        // 获取系统类加载器的加载路径：通常由CLASSSPATH环境变量指定；
         Enumeration<URL> urlEnumeration = systemLoader.getResources("");
         while (urlEnumeration.hasMoreElements()) {
             System.out.println(urlEnumeration.nextElement());
         }
+
+        // 获取扩展类加载器：加载
+        ClassLoader extensionLoader = systemLoader.getParent();
+        System.out.println("扩展类加载器: " + extensionLoader);
+        System.out.println("扩展类加载器的加载路径：" + System.getProperty("java.ext.dirs"));
+
+        // 获取根类加载器，返回null，由jvm实现根类加载器
+        System.out.println("扩展类加载器的parent：" + extensionLoader.getParent());
     }
 }
+
+
