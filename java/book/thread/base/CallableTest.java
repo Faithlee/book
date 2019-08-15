@@ -1,12 +1,21 @@
-package thread;
+package thread.base;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
+/**
+ * Callable实现多线程
+ */
 public class CallableTest {
 
 
     public static void main(String[] args) {
+        /**
+         *
+         * Callable的call方法作为线程执行体，但其本身没有实现run方法;
+         * 返回值使用Future接口来代表，Future接口实现了Runnable接口;
+         * 可以用Future接口的实现类FutureTask作为Thread的target对象
+         */
         FutureTask<Integer> task = new FutureTask<>(()->{
             int i = 0;
             for (; i < 40; i++) {

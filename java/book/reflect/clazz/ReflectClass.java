@@ -1,4 +1,4 @@
-package reflect;
+package reflect.clazz;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -51,7 +51,7 @@ public class ReflectClass {
         System.out.println("@SuppressWarnings注解：" + Arrays.toString(clazz.getAnnotationsByType(SuppressWarnings.class)));
 
         // 按注解类型查看
-        System.out.println("@Annotation注解: " + Arrays.toString(clazz.getAnnotationsByType(reflect.Annotation.class)));
+        System.out.println("@Annotation注解: " + Arrays.toString(clazz.getAnnotationsByType(reflect.clazz.Annotation.class)));
 
         // 内部类
         Class<?>[] innerClasses = clazz.getDeclaredClasses();

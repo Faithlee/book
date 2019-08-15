@@ -1,4 +1,4 @@
-package reflect;
+package reflect.clazz;
 
 @SuppressWarnings(value = "unchecked")
 @Deprecated

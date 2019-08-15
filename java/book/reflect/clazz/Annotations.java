@@ -1,4 +1,4 @@
-package reflect;
+package reflect.clazz;
 
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
