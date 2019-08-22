@@ -1,16 +1,54 @@
-package jdbc.statement;
+package jdbc.base;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Properties;
 
 /**
  * jdbc操作数据库基础
  */
-public class Base {
+public class Jdbc {
+
+    protected String driver;
+
+    protected String url;
+
+    protected String user;
+
+    protected String pass;
 
     public static void main(String[] args) throws Exception {
+        Jdbc jdbc = new Jdbc();
+        jdbc.base();
+    }
+
+    /**
+     * 初始化数据库参数
+     * @param mysql
+     * @throws Exception
+     */
+    public void initParam(File mysql) throws Exception {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(mysql));
+
+        driver = properties.getProperty("driver");
+        url    = properties.getProperty("url");
+        user   = properties.getProperty("user");
+        pass   = properties.getProperty("pass");
+
+        Class.forName(driver);
+    }
+
+    /**
+     * 基本操作流程
+     *
+     * @throws Exception
+     */
+    public void base() throws Exception {
         // 1. 使用反射加载数据库驱动
         Class.forName("com.mysql.jdbc.Driver");
         try (
@@ -24,6 +62,10 @@ public class Base {
             // 5. 记录指针指向行、特定例的值
             while (resultSet.next()) {
                 System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2) + "\t" + resultSet.getString(3) + "\t" + resultSet.getString(4));
+                // 可读性好
+                //System.out.println(resultSet.getString("teacher_name"));
+                // 列索引性能好
+                //System.out.println(resultSet.getString(4));
             }
         } catch (Exception e) {
             e.printStackTrace();

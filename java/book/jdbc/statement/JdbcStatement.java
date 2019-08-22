@@ -1,49 +1,41 @@
 package jdbc.statement;
 
-import java.io.FileInputStream;
+import jdbc.base.Jdbc;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.util.Properties;
+import java.sql.*;
 
-public class JdbcStatement {
-
-    private final Path path = Paths.get("book","jdbc", "resources", "database.properties");
-
-    private String driver;
-
-    private String url;
-
-    private String user;
-
-    private String pass;
-
-
-    public void init(String paramFile) throws Exception {
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(paramFile));
-        driver = properties.getProperty("driver");
-        url    = properties.getProperty("url");
-        user   = properties.getProperty("user");
-        pass   = properties.getProperty("pass");
-    }
+public class JdbcStatement extends Jdbc {
 
     public static void main(String[] args) throws Exception {
-        JdbcStatement statement = new JdbcStatement();
         Path path = Paths.get("book","jdbc", "resources", "database.properties");
 
-        statement.init(path.toFile().toString());
-        statement.createTable();
+        JdbcStatement statement = new JdbcStatement();
+        statement.initParam(path.toFile());
 
+        // create table
+//        statement.initParam(path.toFile());
+//        statement.createTable();
 
         // insert
-        StringBuilder insertSql = new StringBuilder();
-        insertSql.append("insert into jdbc_test(jdbc_name, jdbc_text)");
-        insertSql.append("select s.student_name, t.teacher_name from student_table s, teacher_table t where s.java_teacher=t.teacher_id;");
-        JdbcStatement statement1 = new JdbcStatement();
-        statement1.insert(insertSql.toString());
+//        StringBuilder insertSql = new StringBuilder();
+//        insertSql.append("insert into jdbc_test(jdbc_name, jdbc_text)");
+//        insertSql.append("select s.student_name, t.teacher_name from student_table s, teacher_table t where s.java_teacher=t.teacher_id;");
+//        JdbcStatement insertStatement = new JdbcStatement();
+//        insertStatement.insert(insertSql.toString());
+
+        // 使用executeQuery()查询结果集
+        String query = "select jdbc_name, jdbc_text from jdbc_test";
+        statement.query(query);
+
+        // 使用execute()执行任何类型的sql语句
+        // 查询
+        String querySql = "select jdbc_name, jdbc_text from jdbc_test";
+        statement.executeSql(querySql);
+        // 删除
+//        String deleteSql = "delete from jdbc_test limit 1";
+//        statement.executeSql(deleteSql);
     }
 
     /**
@@ -62,7 +54,7 @@ public class JdbcStatement {
         sb.append("id int auto_increment primary key,");
         sb.append("jdbc_name varchar(255),");
         sb.append("jdbc_text varchar(100) ");
-        sb.append(") engine=innodb;");
+        sb.append(") engine=innodb DEFAULT CHARSET=utf8;");
         System.out.println(sb);
 
         Class.forName(driver);
@@ -81,14 +73,14 @@ public class JdbcStatement {
     }
 
     /**
-     * statement执行DML语句
+     * statement执行DML语句(insert/update/delete)
      *
      * @param insertSql
      * @throws Exception
      */
     public void insert(String insertSql) throws Exception {
         // 数据连接初始化
-        Connection connection = connect(path.toFile().toString());
+        Connection connection = DriverManager.getConnection(url, user, pass);
         if (null == connection) {
             throw new RuntimeException("连接数据库异常!");
         }
@@ -104,19 +96,64 @@ public class JdbcStatement {
         connection.close();
     }
 
+    /**
+     * 执行executeQuery()查询结果集
+     *
+     * @param query
+     * @throws Exception
+     */
+    public void query(String query) throws Exception {
+        try (
+               Connection connection = DriverManager.getConnection(url, user, pass);
+               Statement statement = connection.createStatement();
+               ResultSet resultSet = statement.executeQuery(query);
+                ) {
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString(1) + "\t" + resultSet.getString(2));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    protected Connection connect(String database) throws Exception {
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(database));
-        driver = properties.getProperty("driver");
-        url    = properties.getProperty("url");
-        user   = properties.getProperty("user");
-        pass   = properties.getProperty("pass");
-
-        Class.forName(driver);
-        Connection connection = DriverManager.getConnection(url, user, pass);
-
-        return connection;
     }
 
+    /**
+     * 使用execute()方法执行
+     *
+     * @param sql
+     * @throws Exception
+     */
+    public void executeSql(String sql) throws Exception {
+        try (
+                Connection connection = DriverManager.getConnection(url, user, pass);
+                Statement statement = connection.createStatement()
+                ) {
+            // 使用execute()执行sql返回bool值，如果不清楚执行的语句的类型只能使用此方法执行
+            // 通常推荐使用executeUpdate()或 executeQuery()
+            boolean hasResultRet = statement.execute(sql);
+            // 如果执行DML语句则返回受影响数
+            //Integer count = statement.getUpdateCount();
+            // 如果执行查询则得到结果集
+            //ResultSet resultSet = statement.getResultSet();
+            if (hasResultRet) {
+                try (
+                        ResultSet resultSet = statement.getResultSet();
+                        )  {
+                    ResultSetMetaData metaData = resultSet.getMetaData();
+                    int columnCount = metaData.getColumnCount();
+                    while (resultSet.next()) {
+                        for (int i = 0; i < columnCount; i++) {
+                            // todo 注意列索引必须从1开始
+                            System.out.print(resultSet.getString(i + 1) + "\t");
+                        }
+                        System.out.println();
+                    }
+                }
+            } else {
+                System.out.println("sql语句影响的记录有:" + statement.getUpdateCount());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
