@@ -39,10 +39,12 @@ public class RowSetBase extends Jdbc {
         // 使用RowSetProvider创建
 //        String query1 = "select * from jdbc_test;";
 //        jdbc.createRowSetFactory(query1);
+//        System.exit(0);
 
         // 3. 使用离线RowSet
 //        String query2 = "select * from student_table";
 //        jdbc.foreachRowSet(query2, 0, 0);
+//        System.exit(0);
 
         // 4. 离线分页
         String query3 = "select * from student_table";
