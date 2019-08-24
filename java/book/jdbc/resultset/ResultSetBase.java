@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 /**
  * 结果集操作
  *
- * 1. 可滚动的结果集，只能用于一张表，而且必须包含主键
+ * 1. 可滚动的结果集，只能用于一张表，而且必须包含主键，否则会引用更新失败
  */
 public class ResultSetBase extends Jdbc {
 
@@ -55,6 +55,11 @@ public class ResultSetBase extends Jdbc {
         } catch (Exception e) {
 
         }
+
+    }
+
+    public void metaData() {
+
 
     }
 
