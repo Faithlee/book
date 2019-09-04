@@ -49,7 +49,7 @@ public class BasicDataSourceBase extends Jdbc {
      * @param query
      */
     public void executeQuery(String query) {
-        Path path = Paths.get("book", "jdbc", "resources", "database.properties");
+        Path path = Paths.get("src", "jdbc", "resources", "database.properties");
 
         try (
             Connection connection = createDataSource(path.toFile());
