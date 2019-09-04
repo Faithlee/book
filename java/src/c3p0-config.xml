@@ -21,9 +21,9 @@
     <!-- This app is massive! -->
     <named-config name="intergalactoApp">
         <property name="driverClass">com.mysql.cj.jdbc.Driver</property>
-        <property name="jdbcUrl">jdbc:mysql://192.168.10.151:3306/test</property>
-        <property name="user">faithlee</property>
-        <property name="password">mysql@098</property>
+        <property name="jdbcUrl">jdbc:mysql://127.0.0.1:3306/test</property>
+        <property name="user">mysql</property>
+        <property name="password">mysql</property>
 
         <property name="acquireIncrement">50</property>
         <property name="initialPoolSize">100</property>
