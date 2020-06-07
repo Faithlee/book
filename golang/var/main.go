@@ -2,6 +2,8 @@ package main
 
 import "fmt"
 import "math"
+import "flag"
+import "time"
 
 var p float32 = 3.14
 
@@ -101,8 +103,43 @@ hello,go!
 	fmt.Printf("int16: 0x%x %d\n", i16, i16)
 	// 将浮点数转换为整型，精度丢失
 	fmt.Println(int(p));
+	fmt.Println()
 
+	// 指针
+	var cat int = 1
+	var fruit string = "banana"
+	fmt.Printf("%p %p\n", &cat, &fruit)
+	// 从指针获取指针指向的值
+	var locate = "point 10090, 90000"
+	ptr := &locate
+	// 打印类型及地址
+	fmt.Printf("ptr type: %T, ptr address: %p\n", ptr, ptr)
+	// 对指针取值操作
+	value := *ptr
+	fmt.Printf("value type: %T, value: %s\n", value, value)
+	// 指针修改值
+	num1, num2 := 1,2
+	swap(&num1, &num2)
+	fmt.Printf("num1=%d, num2=%d\n", num1, num2)
 
+	num3, num4 := 3,4
+	fmt.Printf("num3=%p, num4=%p\n", &num3, &num4)
+	fmt.Printf("num3=%d, num4=%d\n", num3, num4)
+	swap2(&num3, &num4)
+	fmt.Printf("num3=%p, num4=%p\n", &num3, &num4)
+	fmt.Printf("num3=%d, num4=%d\n", num3, num4)
+
+	// 使用flag处理命令行参数
+	var mode = flag.String("mode", "", "process mode")
+	flag.Parse()
+	fmt.Println("flag命令行mode:", *mode)
+	pointer()
+
+	// 常量
+	constant()
+
+	// 类型别名
+	typeAlias()
 }
 
 func GetData()(int, int){
@@ -125,4 +162,93 @@ func btoi(b bool)int {
 
 func itob(i int) bool {
 	return i != 0
+}
+
+func swap(a, b *int){
+	t := *a
+	*a = *b
+	*b = t
+}
+
+func swap2(a, b *int) {
+	a, b = b, a
+}
+
+func pointer() {
+	// 创建指针的方法
+	str := new(string)
+	*str = "go语言编程"
+	fmt.Println("创建指针的方法:", *str)
+}
+
+func constant(){
+	const pi = 3.14159
+	const s string = "str"
+	const c1 = 'c'
+	const c2 = '\x41'
+	const c3 = '5'
+	fmt.Printf("常量定义: %f, %s, %c, %c, %c\n\n", pi, s, c1, c2, c3)
+
+	// 在编译时能够确定下来
+	const f1 = 2/3
+	const f2 = 5/3
+	fmt.Println("常量可以使用赋值运算:", f1, f2)
+
+	// 批量定义1
+	const (
+		e = 2.7182828
+		PI = 3.141596
+	)
+	fmt.Printf("批量声明: %f, %f\n", e, PI)
+
+	// 批量定义2
+	const (
+		a = 1
+		b
+		c = 2
+		d
+	)
+	fmt.Printf("批量声明: %d, %d, %d, %d\n\n", a, b, c, d)
+
+	// todo 打印常量的类型？
+	// 常量声明可以包含一个类型和一个值
+	const noDelay time.Duration = 1;
+	const timeout = 5 * time.Minute
+	fmt.Printf("%T %[1]v\n", noDelay)
+	fmt.Printf("%T %[1]v\n", timeout)
+	fmt.Printf("%T %[1]v\n\n", time.Minute)
+
+	// iota常量生成器
+	type Weekday int
+	const (
+		Sunday Weekday = iota
+		Monday
+		Tuesday
+		Wednesday
+		Thursday
+		Friday
+		Saturday
+	)
+	fmt.Println("iota实现星期:", Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)
+
+	// 无类型常量：布尔、整数、浮点型、字符、字符串、复数
+	// 通过延迟确定常量的类型，提供更高的运算精度，不需要显式的转换
+	//var x float32 = math.Pi
+	//var y float64 = math.Pi
+	//var z complex128 = math.Pi
+	fmt.Println()
+}
+
+// todo 在结构体成员嵌入时使用别名？
+func typeAlias(){
+	// 类型定义
+	type NewInt int
+
+	var a NewInt
+	fmt.Printf("a type: %T\n", a)
+
+	// 类型别名
+	type IntAlias = int
+	var b IntAlias
+	fmt.Printf("b type: %T\n", b)
 }
