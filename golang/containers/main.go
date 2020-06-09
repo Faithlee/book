@@ -1,6 +1,9 @@
 package main
 
 import "fmt"
+import "sort"
+import "sync"
+import "container/list"
 
 func main(){
 	// 1.数组基础
@@ -26,7 +29,23 @@ func main(){
 
 	// 8.多维切片
 	multiSlice()
+
+	// 9.map
+	mapBase()
+
+	// 10.map遍历
+	mapRange()
+
+	// 11.map删除元素
+	mapDelete()
+
+	// 12.map并发使用
+	syncMap()
+
+	// 13.list
+	listBase()
 }
+
 
 func baseArray(){
 	// 定义长度为3的数组
@@ -288,6 +307,125 @@ func multiSlice(){
 
 	slice[0] = append(slice[0], 20)
 	fmt.Println("多维切片添加元素:", slice)
+
+	fmt.Println()
+}
+
+func mapBase(){
+	fmt.Println("map数据结构:")
+	var mapList map[string]int
+	var mapAssigned map[string]int
+
+	mapList = map[string]int{"one":1, "two":2}
+	mapAssigned = mapList
+	mapAssigned["two"] = 3
+
+	mapCreated := make(map[string]float32)
+	mapCreated["key1"] = 4.5
+	mapCreated["key2"] = 3.14159
+
+	fmt.Printf("mapList[\"one\"]: %d\n", mapList["one"])
+	fmt.Printf("mapList[\"two\"]: %d\n", mapList["two"])
+	fmt.Printf("mapList[\"ten\"]: %d\n", mapList["ten"])
+
+	fmt.Printf("mapCreate[\"key2\"]: %f\n", mapCreated["key2"])
+
+	// 用切片作map的值
+	//map1 := make(map[int][]int)
+	fmt.Println()
+}
+
+func mapRange() {
+	fmt.Println("map遍历:")
+	scene := make(map[string]int)
+	scene["route"] = 66
+	scene["brazil"] = 4
+	scene["china"] = 960
+	for k,v := range scene {
+		fmt.Println(k, v)
+	}
+
+	// map排序输出
+	var sceneList []string
+	for k := range scene {
+		sceneList = append(sceneList, k)
+	}
+	sort.Strings(sceneList)
+	fmt.Println("map排序后输出:", sceneList)
+
+	fmt.Println()
+}
+
+func mapDelete() {
+	fmt.Println("map删除元素:")
+
+	scene := make(map[string]int)
+	scene["route"] = 60
+	scene["brazil"] = 4
+	scene["china"] = 960
+	fmt.Println("map元素:", scene)
+
+	delete(scene, "brazil")
+	for k,v := range scene {
+		fmt.Println("map删除元素后:", k, v)
+	}
+
+	// 清空元素
+	scene = make(map[string]int)
+	fmt.Println("map清空元素:", scene)
+	fmt.Println()
+}
+
+func syncMap() {
+	// 并发环境中使用map
+	fmt.Println("并发环境中使用map:")
+	var scene sync.Map
+	scene.Store("greece", 97)
+	scene.Store("london", 100)
+	scene.Store("egypt", 200)
+	// 结构比较奇怪？
+	fmt.Println("查看map:", scene)
+	fmt.Println(scene.Load("london"))
+
+	// 删除元素
+	scene.Delete("london")
+
+	// 遍历map
+	scene.Range(func(k, v interface{}) bool {
+		fmt.Println("map iterate:", k, v)
+		return true
+	})
+	fmt.Println()
+}
+
+func listBase() {
+	fmt.Println("列表数据结构:")
+	list1 := list.New()
+	list1.PushBack("last")
+	list1.PushFront("first")
+	fmt.Println(list1)
+
+	var list2 list.List
+	list2.PushBack("b")
+	list2.PushFront("a")
+
+	item := list2.PushBack("d")
+
+	list2.InsertAfter("e", item)
+	list2.InsertBefore("c", item)
+
+	// 遍历输出
+	fmt.Println("遍历输出:")
+	for i := list2.Front(); i != nil; i = i.Next() {
+		fmt.Printf("%s ", i.Value)
+	}
+	fmt.Println()
+
+	fmt.Println("Remove删除元素:")
+	list2.Remove(item)
+	for i:=list2.Front(); i!=nil; i=i.Next() {
+		fmt.Printf("%s ", i.Value)
+	}
 
 	fmt.Println()
 }
