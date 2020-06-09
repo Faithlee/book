@@ -20,6 +20,12 @@ func main(){
 
 	// 6.切片删除
 	sliceDelete()
+
+	// 7.切片遍历
+	sliceRange()
+
+	// 8.多维切片
+	multiSlice()
 }
 
 func baseArray(){
@@ -141,7 +147,7 @@ func sliceArray() {
 	fmt.Println("直接声明新切片:", strList, numList, numListEmpty)
 	fmt.Println("直接声明新切片大小:", len(strList), len(numList), len(numListEmpty))
 	fmt.Println("判断切片结果:", strList == nil, numList == nil, numListEmpty == nil)
-	// todo 新切片使用append添加元素
+	// 新切片使用append添加元素
 	numList = append(numList, 1)
 	numList = append(numList, 2)
 	fmt.Println("append添加元素:", numList)
@@ -224,13 +230,64 @@ func sliceDelete(){
 	idx := 2
 	str := []string{"a", "b", "c", "d", "e"}
 	fmt.Println("切片删除位置2的元素:", str, str[:idx], str[idx+1:])
+
 	newStr := append(str[:idx], str[idx+1:]...)
 	fmt.Println("删除后的元素重新连接:", newStr)
 	fmt.Println()
 
-	var a = []int{1,2,3}
 	// 从开头删除：通过移动指针或原地完成(append)
+	var a1 = []int{1,2,3,4,5,6,7}
+	a1 = append(a1[:0], a1[1:]...)
+	//a1 = append(a1[:n], a1[n:]...) 
+	fmt.Println("删除开头元素:", a1)
+
 	// 从中间删除
-	// 从尾部删除
-	fmt.Println(a)
+	var a2 = []int{1,2,3,4,5,6,7}
+	i := 3
+	a2 = append(a2[:i], a2[i+1:]...)
+	fmt.Println("删除中间的元素:", a2)
+	// 删除中间的n个元素
+	n := 2
+	//a2 = append(a2[:i], a2[i+n:]...)
+	a2 = a2[:i+copy(a2[i:], a2[i+n:])]
+	fmt.Println("删除中间n个元素:", a2)
+
+	// 从尾部删除1个元素
+	var a3 = []int{1,2,3,4,5,6,7}
+	a3 = a3[:len(a3)-1]
+	fmt.Println("从尾部删除元素:", a3)
+	// 删除尾部n个元素
+	//n := 3
+	//a3 = a3[:len(a3)-n]
+	fmt.Println()
+}
+
+func sliceRange() {
+	fmt.Println("切片遍历:")
+	slice := []int{10, 20, 30, 40}
+	for index, value := range slice {
+		fmt.Printf("index: %d, value: %d\n", index, value)
+	}
+
+	fmt.Println("range返回的是每个元素的副本")
+	for index, value := range slice {
+		fmt.Printf("value:%d, value-addr:%X, element-addr:%X\n", value, &value, &slice[index])
+	}
+
+	// 使用传统for循环遍历
+	for index := 2; index<len(slice); index++ {
+		fmt.Printf("index:%d, value:%d\n", index, slice[index])
+	}
+
+	fmt.Println()
+}
+
+func multiSlice(){
+	slice := [][]int{{10}, {30, 40}}
+	fmt.Println("多维切片", slice)
+
+	slice[0] = append(slice[0], 20)
+	fmt.Println("多维切片添加元素:", slice)
+
+	fmt.Println()
 }
