@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 import "math"
+import "flag"
 
 func main(){
 	fmt.Println("计算平方和:", sqrt(3,4))
@@ -25,6 +26,38 @@ func main(){
 	var f func()
 	f = fire
 	f()
+
+	fmt.Println("匿名函数：")
+	func (data int) {
+		fmt.Println("hello", data)
+	}(100)
+
+	fmt.Println("匿名函数赋值给变量:")
+	f1 := func (data int) {
+		fmt.Println("hello", data)
+	}
+	f1(100)
+	fmt.Println()
+
+	// 匿名函数用作回调函数
+	visit([]int{1,2,3,4}, func(v int) {
+		fmt.Println("回调函数", v)
+	})
+
+	// 匿名函数封装操作
+	var skillParam = flag.String("skill", "", "skill to perform")
+	flag.Parse()
+
+	var skill = map[string]func(){
+		"fire": func() {fmt.Println("chicken fire\n")},
+		"run": func(){fmt.Println("soldier run\n")},
+		"fly": func(){fmt.Println("angel fly\n")},
+	}
+	if f, ok := skill[*skillParam]; ok {
+		f()
+	} else {
+		fmt.Println("skill not found\n")
+	}
 }
 
 func sqrt(x, y float64) float64 {
@@ -61,5 +94,12 @@ func returnTwo3() (a, b int) {
 
 //将函数作为值保存在变量中
 func fire() {
-	fmt.Println("fire!!!")
+	fmt.Println("fire!!!\n")
+}
+
+// 回调函数
+func visit(list []int, f func(int)) {
+	for _, v := range list {
+		f(v)
+	}
 }
