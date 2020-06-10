@@ -4,6 +4,7 @@ import "fmt"
 import "sort"
 import "sync"
 import "container/list"
+import "unsafe"
 
 func main(){
 	// 1.数组基础
@@ -44,6 +45,9 @@ func main(){
 
 	// 13.list
 	listBase()
+
+	// 14.nil零值
+	baseNil()
 }
 
 
@@ -427,5 +431,34 @@ func listBase() {
 		fmt.Printf("%s ", i.Value)
 	}
 
-	fmt.Println()
+	fmt.Println("\n")
+}
+
+func baseNil() {
+	// nil和nil不能直接比较：invalid operation: nil == nil (operator == not defined on nil)
+	//fmt.Println(nil == nil)
+
+	// nil不是关键字或保留字
+	//var nil = error.New("error")
+	//fmt.Println(nil)
+
+	fmt.Println("1. 不同类型的nil的地址是相同的:")
+	var arr []int
+	var num *int
+	fmt.Printf("arr address: %p\n", arr)
+	fmt.Printf("num address: %p\n", num)
+
+	fmt.Println("2. nil是map、slice、pointer、channle的零值")
+	var m map[int]string
+	var ptr *int
+	var c chan int
+	var s1 []int
+	var f func()
+	var i interface{}
+	fmt.Printf("map: %#v, size: %d\n", m, unsafe.Sizeof(m))
+	fmt.Printf("ptr: %#v, size: %d\n", ptr, unsafe.Sizeof(ptr))
+	fmt.Printf("chan: %#v, size: %d\n", c, unsafe.Sizeof(c))
+	fmt.Printf("slice: %#v, size: %d\n", s1, unsafe.Sizeof(s1))
+	fmt.Printf("func: %#v, size: %d\n", f, unsafe.Sizeof(f))
+	fmt.Printf("interface: %#v, size: %d\n", i, unsafe.Sizeof(i))
 }
