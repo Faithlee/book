@@ -9,6 +9,10 @@ func main() {
 	forStructure()
 	nine()
 	forRange()
+	switchCase()
+	gotoReturnLoop()
+	breakFlow()
+	continueFlow()
 }
 
 func ifBranch() {
@@ -59,6 +63,7 @@ func forStructure() {
 		}
 	}
 	//JLoop:
+	//fmt.Println("break loop")
 
 	// 写法4：初始语句放在外层，但分号是必须的
 	var step int = 2
@@ -97,7 +102,7 @@ func nine() {
 
 func forRange() {
 	fmt.Println("4.for range循环")
-	
+
 	// 遍历数组、切片
 	for key, val := range []int{1,2,3,4}{
 		fmt.Printf("遍历切片: key:%d, val:%d\n", key, val)
@@ -130,4 +135,132 @@ func forRange() {
 	}
 
 	// 可以使用_匿名变量处理遍历时不需要的变量，也不会分配空间
+	fmt.Println()
 }
+
+func switchCase(){
+	fmt.Println("5.swicth case分支:")
+	// case代码块是独立的
+	var a = "hello"
+	switch a {
+		case "hello":
+			fmt.Println("Hello")
+		case "world":
+			fmt.Println("World")
+		default:
+			fmt.Println("default")
+	}
+
+	
+	// 一分支多个值
+	var str = "mum"
+	switch str {
+		case "mum","dad":
+			fmt.Println("family")
+		default:
+			fmt.Println("default")
+	}
+
+	fmt.Print("分支表达式:")
+	var i int = 110
+	switch {
+		case i > 10 && i < 100:
+			fmt.Println(i)
+		case i > 100 && i < 200:
+			fmt.Println(i+100)
+	}
+
+	fmt.Print("跨越case的fallthrough: ")
+	var s = "hello"
+	switch {
+		case s == "hello":
+			fmt.Print("Hello ")
+			fallthrough
+		case s != "world":
+			fmt.Print("World")
+	}
+
+	fmt.Println("\n")
+}
+
+func gotoReturnLoop() {
+	fmt.Println("6.goto退出多层:")
+	var breakAgain bool
+	for x := 0; x < 10; x++ {
+		for y := 0; y < 10; y++ {
+			if y == 2 {
+				breakAgain = true
+				break
+			}
+		}
+		if breakAgain {
+			break
+		}
+	}
+	fmt.Println("传统退出多层:break")
+
+	for x := 0; x < 10; x++ {
+		for y := 0; y < 10; y++ {
+			if y == 2 {
+				goto breakHere
+			}
+		}
+	}
+breakHere:
+	fmt.Println("goto退出多层:goto")
+
+	// 使用goto处理错误，防止传统处理错误时重复的代码修改问题
+	/*
+	err := firstError()
+	if err != nil {
+		goto onExit
+	}
+	err := sencodError()
+	if err != nil {
+		goto onExit
+	}
+onExit:
+	fmt.Println(err)
+	exitProcess()
+	*/
+	fmt.Println()
+}
+
+func breakFlow() {
+	fmt.Printf("7.break中断for/switch/select代码块: ")
+
+OuterLoop:
+	for i := 0; i < 2; i++ {
+		for j := 0; j < 5; j++ {
+			switch j {
+				case 2:
+					fmt.Println(i, j)
+					break OuterLoop
+				case 3:
+					fmt.Println(i, j)
+					break OuterLoop
+			}
+		}
+	}
+
+	fmt.Println("break label OuterLoop!")
+	fmt.Println()
+}
+
+func continueFlow() {
+	fmt.Printf("8.continue中断当前循环: ")
+
+OuterLoop:
+	for x := 0; x < 10; x++ {
+		for y := 0; y < 10; y++ {
+			switch y {
+				case 2:
+					fmt.Println(x, y)
+					continue OuterLoop
+			}
+		}
+	}
+
+	fmt.Println()
+}
+
