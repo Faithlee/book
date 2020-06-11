@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 import "math"
+import "flag"
 import "bytes"
 
 func main(){
@@ -27,8 +28,40 @@ func main(){
 	f = fire
 	f()
 
+	fmt.Println("2.匿名函数：")
+	func (data int) {
+		fmt.Println("hello", data)
+	}(100)
+
+	fmt.Println("匿名函数赋值给变量:")
+	f1 := func (data int) {
+		fmt.Println("hello", data)
+	}
+	f1(100)
+	fmt.Println()
+
+	// 匿名函数用作回调函数
+	visit([]int{1,2,3,4}, func(v int) {
+		fmt.Println("回调函数", v)
+	})
+
+	// 匿名函数封装操作
+	var skillParam = flag.String("skill", "", "skill to perform")
+	flag.Parse()
+
+	var skill = map[string]func(){
+		"fire": func() {fmt.Println("chicken fire\n")},
+		"run": func(){fmt.Println("soldier run\n")},
+		"fly": func(){fmt.Println("angel fly\n")},
+	}
+	if f, ok := skill[*skillParam]; ok {
+		f()
+	} else {
+		fmt.Println("skill not found\n")
+	}
+
 	// 闭包内部修改引用的变量，会对变量进行实际的修改 
-	fmt.Println("2.闭包内部修改引用的变量:")
+	fmt.Println("3.闭包内部修改引用的变量:")
 	str := "hello,world"
 	func1 := func() {
 		str = "hello,golang"
@@ -54,7 +87,7 @@ func main(){
 	fmt.Println("记忆效应:", name, hp)
 	fmt.Println()
 
-	fmt.Println("3.可变参数函数:")
+	fmt.Println("4.可变参数函数:")
 	variableFunc(1,2,3,4)
 	variableFunc2(1, 234, "hello", 3.14)
 	fmt.Println("合并字符串:", joinStrings("apple", " banana", " orange"))
@@ -62,7 +95,7 @@ func main(){
 	// 打印可变参数的值与类型
 	ret := printType(100, true, "golang")
 	fmt.Println("打印可变参数的值与类型:", ret)
-	
+
 	fmt.Println("多个可变函数中传递参数：")
 	print(1, 3.14, "golang")
 }
@@ -101,7 +134,14 @@ func returnTwo3() (a, b int) {
 
 //将函数作为值保存在变量中
 func fire() {
-	fmt.Println("fire!!!")
+	fmt.Println("fire!!!\n")
+}
+
+// 回调函数
+func visit(list []int, f func(int)) {
+	for _, v := range list {
+		f(v)
+	}
 }
 
 // 记忆效应
