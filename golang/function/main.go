@@ -4,9 +4,11 @@ import "fmt"
 import "math"
 import "flag"
 import "bytes"
+import "os"
+import "sync"
 
 func main(){
-	fmt.Println("计算平方和:", sqrt(3,4))
+	fmt.Println("sync.Mutex计算平方和:", sqrt(3,4))
 
 	fmt.Println("1.函数声明的几种方法:")
 	fmt.Printf("%T\n", add)
@@ -98,6 +100,31 @@ func main(){
 
 	fmt.Println("多个可变函数中传递参数：")
 	print(1, 3.14, "golang")
+
+	fmt.Println("5.defer延迟执行语句:")
+	fmt.Println("defer begin")
+	defer fmt.Println("defer 1")
+	defer fmt.Println("defer 2")
+	defer fmt.Println("defer 3")
+	fmt.Println("defer end")
+
+	filesize := filesize("./src/function/main.go")
+	fmt.Println("filesize: ", filesize)
+
+	fmt.Println("6.递归调用:")
+	// fibonacci
+	for i := 1; i <= 10; i++ {
+		fmt.Printf("fibonacci(%d)=%d\n", i, fibonacci(i))
+	}
+	// 阶乘
+	for i := 1; i < 10; i++ {
+		fmt.Printf("factorial(%d)=%d\n", i, factorial(uint64(i)))
+	}
+	// 多个函数递归调用
+	fmt.Printf("%d is even, is %t\n", 15, even(15))
+	fmt.Printf("%d is even, is %t\n", 16, even(16))
+	fmt.Printf("%d is odd, is %t\n", 17, odd(17))
+	fmt.Printf("%d is odd, is %t\n", 18, odd(18))
 }
 
 func sqrt(x, y float64) float64 {
@@ -226,4 +253,84 @@ func rawPrint(slist ...interface{}) {
 	for _, str := range slist {
 		fmt.Println(str)
 	}
+}
+
+// defer 退出时释放资源
+var (
+	valueByKey = make(map[string]int)
+	valueByKeyGuard sync.Mutex
+)
+// 传统加锁处理方式
+func readValue(key string) int {
+	// 对共享资源加锁
+	valueByKeyGuard.Lock()
+	v := valueByKey[key]
+	valueByKeyGuard.Unlock()
+
+	return v
+}
+// 使用defer延迟释放资源
+func readValueUseDefer(key string) int {
+	valueByKeyGuard.Lock()
+	// 不会马上执行，延迟到函数调用结束
+	defer valueByKeyGuard.Unlock()
+
+	return valueByKey[key]
+}
+
+// 延迟释放句柄
+func filesize(filename string)int64 {
+	f,err := os.Open(filename)
+	if err != nil {
+		return -1
+	}
+	// 延迟到return之前执行
+	defer f.Close()
+
+	info,err := f.Stat()
+	if err != nil {
+		// 触发defer
+		return -1
+	}
+
+	size := info.Size()
+
+	// 触发defer
+	return size
+}
+
+// 递归函数1
+func fibonacci(i int) (res int) {
+	if i <= 2 {
+		res = 1
+	} else {
+		res = fibonacci(i-1) + fibonacci(i-2)
+	}
+
+	return
+}
+// 递归函数2
+func factorial(n uint64) (res uint64) {
+	if n > 1 {
+		res = factorial(n-1) * n
+		return res
+	}
+
+	return 1
+}
+
+// 递归函数3：函数之间相互调用
+func even(n int) bool {
+	if n == 0 {
+		return true
+	}
+
+	return odd(n - 1)
+}
+func odd(n int) bool {
+	if n == 0 {
+		return false
+	}
+
+	return even(n - 1)
 }
