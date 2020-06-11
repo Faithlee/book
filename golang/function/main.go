@@ -2,11 +2,12 @@ package main
 
 import "fmt"
 import "math"
+import "bytes"
 
 func main(){
 	fmt.Println("计算平方和:", sqrt(3,4))
 
-	fmt.Println("函数声明的几种方法:")
+	fmt.Println("1.函数声明的几种方法:")
 	fmt.Printf("%T\n", add)
 	fmt.Printf("%T\n", sub)
 	fmt.Printf("%T\n", first)
@@ -25,6 +26,45 @@ func main(){
 	var f func()
 	f = fire
 	f()
+
+	// 闭包内部修改引用的变量，会对变量进行实际的修改 
+	fmt.Println("2.闭包内部修改引用的变量:")
+	str := "hello,world"
+	func1 := func() {
+		str = "hello,golang"
+	}
+	func1()
+	fmt.Println(str)
+
+	fmt.Println("闭包的记忆效应:")
+	accumulator := accumulate(1)
+	fmt.Println("累加器:", accumulator())
+	fmt.Printf("%p\n", &accumulator)
+	fmt.Println("累加器:", accumulator())
+	fmt.Printf("%p\n", &accumulator)
+
+	accumulator2 := accumulate(10)
+	fmt.Println("累加器2:", accumulator2())
+	fmt.Printf("%p\n", &accumulator2)
+	fmt.Println("累加器2:", accumulator2())
+	fmt.Printf("%p\n\n", &accumulator2)
+
+	generator := generator("high")
+	name,hp := generator()
+	fmt.Println("记忆效应:", name, hp)
+	fmt.Println()
+
+	fmt.Println("3.可变参数函数:")
+	variableFunc(1,2,3,4)
+	variableFunc2(1, 234, "hello", 3.14)
+	fmt.Println("合并字符串:", joinStrings("apple", " banana", " orange"))
+
+	// 打印可变参数的值与类型
+	ret := printType(100, true, "golang")
+	fmt.Println("打印可变参数的值与类型:", ret)
+	
+	fmt.Println("多个可变函数中传递参数：")
+	print(1, 3.14, "golang")
 }
 
 func sqrt(x, y float64) float64 {
@@ -62,4 +102,88 @@ func returnTwo3() (a, b int) {
 //将函数作为值保存在变量中
 func fire() {
 	fmt.Println("fire!!!")
+}
+
+// 记忆效应
+func accumulate(value int) func() int {
+	return func() int {
+		value++
+		return value
+	}
+}
+
+func generator(name string) func()(string, int) {
+	hp := 100
+	return func()(string, int) {
+		return name,hp
+	}
+}
+
+// 可变参数函数
+func variableFunc(args ...int) {
+	for _, arg := range args {
+		fmt.Println(arg)
+	}
+}
+// 任意类型的可变参数
+func variableFunc2(args ...interface{}) {
+	for _, arg := range args {
+		switch arg.(type) {
+			case int:
+				fmt.Println(arg, "is an int value")
+			case string:
+				fmt.Println(arg, "is a string value")
+			case int64:
+				fmt.Println(arg, "is an int64 value")
+			default:
+				fmt.Println("unknown type")
+		}
+	}
+}
+
+// join
+func joinStrings(slist ...string) string {
+	var b bytes.Buffer
+	for _,str := range slist {
+		b.WriteString(str)
+	}
+
+	return b.String()
+}
+
+func printType(slist ...interface{}) string {
+	var b bytes.Buffer
+	for _, s := range slist {
+		str := fmt.Sprintf("%v", s)
+		var typeStr string
+		switch s.(type) {
+			case bool:
+				typeStr = "bool"
+			case string:
+				typeStr = "string"
+			case int:
+				typeStr = "int"
+		}
+
+		b.WriteString("value:")
+		b.WriteString(str)
+		b.WriteString(" type:")
+		b.WriteString(typeStr)
+		b.WriteString("\n")
+	}
+
+	return b.String()
+}
+
+// 多个可变函数传递参数
+func print(slist ...interface{}) {
+	// 可变参数时可以省略类型
+	rawPrint(slist...)
+	// slist当作一个整体传
+	rawPrint(slist)
+}
+func rawPrint(slist ...interface{}) {
+	for _, str := range slist {
+		fmt.Println(str)
+	}
 }
