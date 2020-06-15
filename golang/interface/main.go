@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 import "io"
+import "sort"
 
 func main() {
 	fmt.Println("接口")
@@ -39,11 +40,49 @@ func main() {
 	value,ok := x.(int)
 	fmt.Print("x=", value, ",ok=", ok, "\n")
 
+	// nil类型?
 	var n interface{}
 	n = nil
 	value1, ok := n.(int)
 	fmt.Println(value1, ok)
 	fmt.Println()
+
+	fmt.Println("go语言排序:")
+	games := MyStringList{
+		"3. Triple kill",
+		"5. Penta kill",
+		"2. Double kill",
+		"4. Quadra kill",
+		"1. First Blood",
+	}
+	sort.Sort(games)
+	for _, v := range games {
+		fmt.Printf("%s\n", v)
+	}
+	// 直接使用StringSlice
+	var names sort.StringSlice
+	names = sort.StringSlice{"one", "two", "three", "four"}
+	sort.Strings(names)
+	fmt.Println("字符串直接排序:", names)
+
+	// 对整数排序
+	nums := sort.IntSlice{8,6,4,9,3,5,1,}
+	sort.Ints(nums)
+	fmt.Println("整数直接排序:", nums)
+
+	// 结构体排序
+	heros := Heros{
+		&Hero{"吕布", Tank,},
+		&Hero{"李白", Assassin,},
+		&Hero{"妲己", Mage},
+		&Hero{"貂蝉", Assassin,},
+		&Hero{"关羽", Tank},
+		&Hero{"诸葛亮", Mage},
+	}
+	sort.Sort(heros)
+	for _,v := range heros {
+		fmt.Printf("%+v\n", v)
+	}
 }
 
 type DataWriter interface {
@@ -106,4 +145,46 @@ type GameService struct {
 
 func (game GameService) Start() {
 	fmt.Println("service start")
+}
+
+// #排序
+type MyStringList []string
+
+func (m MyStringList) Len() int {
+	return len(m)
+}
+func (m MyStringList) Less(i, j int) bool {
+	return m[i] < m[j]
+}
+func (m MyStringList) Swap(i, j int) {
+	m[i],  m[j] = m[j], m[i]
+}
+
+// 结构体排序：需要明确排序的维度
+type HeroKind int
+const (
+	None HeroKind = iota
+	Tank
+	Assassin
+	Mage
+)
+
+type Hero struct {
+	Name string
+	Kind HeroKind
+}
+
+type Heros []*Hero
+func (heros Heros) Len() int {
+	return len(heros)
+}
+func (heros Heros) Less(i, j int) bool{
+	if  heros[i].Kind != heros[j].Kind {
+		return heros[i].Kind < heros[j].Kind
+	}
+
+	return heros[i].Name < heros[j].Name
+}
+func (heros Heros) Swap(i, j int) {
+	heros[i], heros[j] = heros[j], heros[i]
 }
