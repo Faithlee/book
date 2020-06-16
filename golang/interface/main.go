@@ -47,7 +47,7 @@ func main() {
 	fmt.Println(value1, ok)
 	fmt.Println()
 
-	fmt.Println("go语言排序:")
+	fmt.Println("4.go语言排序:")
 	games := MyStringList{
 		"3. Triple kill",
 		"5. Penta kill",
@@ -82,6 +82,39 @@ func main() {
 	sort.Sort(heros)
 	for _,v := range heros {
 		fmt.Printf("%+v\n", v)
+	}
+
+	// 接口嵌套
+	fmt.Println("5.接口嵌套")
+	var wc io.WriteCloser = new(Device)
+	wc.Write(nil)
+	wc.Close()
+
+	var writerOnly io.Writer = new(Device)
+	writerOnly.Write(nil)
+
+	fmt.Println("6.通过类型断言转换接口类型")
+//	var w io.Writer
+//	w = os.Stdout
+//	file := w.(*os.File)
+//	fmt.Println(file)
+//	// 宕机
+//	c,ok := w.(*bytes.Buffer)
+//	fmt.Println(c, ok)
+	animals := map[string]interface{}{
+		"bird": new(bird),
+		"pig" : new(pig),
+	}
+	for name, obj := range animals {
+		flyer, isFly := obj.(Flyer)
+		walker, isWalk := obj.(Walker)
+		fmt.Printf("name: %s, isFly: %v, isWalker: %v\n", name, isFly, isWalk)
+		if isFly {
+			flyer.Fly()
+		}
+		if isWalk {
+			walker.Walk()
+		}
 	}
 }
 
@@ -187,4 +220,54 @@ func (heros Heros) Less(i, j int) bool{
 }
 func (heros Heros) Swap(i, j int) {
 	heros[i], heros[j] = heros[j], heros[i]
+}
+
+// 接口嵌套组合
+type Writer interface{
+	Write(p []byte)(n int, err error)
+}
+type Closer interface {
+	Close() error
+}
+
+type WriteCloser interface {
+	Writer
+	Closer
+}
+
+type Device struct {
+
+}
+func (device Device) Write(p []byte)(n int, err error) {
+	fmt.Println("写入设备")
+	return 0, nil
+}
+func (device Device) Close() error {
+	fmt.Println("关闭设备")
+	return nil
+}
+
+// 类型转换
+type Flyer interface {
+	Fly()
+}
+type Walker interface {
+	Walk()
+}
+
+type bird struct{
+
+}
+func (b bird) Fly(){
+	fmt.Println("bird can fly")
+}
+func (b bird) Walk() {
+	fmt.Println("bird can walk")
+}
+
+type pig struct {
+
+}
+func (p pig) Walk() {
+	fmt.Println("pig can walk")
 }
