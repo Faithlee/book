@@ -116,6 +116,24 @@ func main() {
 			walker.Walk()
 		}
 	}
+	fmt.Println()
+
+	fmt.Println("7.使用分支类型进行类型判断")
+	// 判断基本类型
+	printType(1024)
+	printType("golang")
+	printType(false)
+	//判断接口类型
+	printInterfaceType(new(Alipay))
+	printInterfaceType(new(Cash))
+
+	var facePay ContainUseFaceId
+	facePay = new(Alipay)
+	facePay.CanUseFaceId()
+
+	var cashPay ContainStolen
+	cashPay = new(Cash)
+	cashPay.Stolen()
 }
 
 type DataWriter interface {
@@ -270,4 +288,50 @@ type pig struct {
 }
 func (p pig) Walk() {
 	fmt.Println("pig can walk")
+}
+
+// 类型分支
+func printType(v interface{}) {
+	switch v.(type) {
+		case int:
+			fmt.Println(v, "is int")
+		case string:
+			fmt.Println(v, "is string")
+		case bool:
+			fmt.Println(v, "is bool")
+		default:
+			fmt.Println(v, "is unknown")
+	}
+}
+// 类型分支判断接口
+// 对现金接口的实现
+type ContainUseFaceId interface {
+	CanUseFaceId()
+}
+
+type ContainStolen interface {
+	Stolen()
+}
+
+type Alipay struct {
+
+}
+func (alipay Alipay) CanUseFaceId() {
+	fmt.Println("alipay can use faceId pay")
+}
+
+type Cash struct {
+
+}
+func (cash Cash) Stolen() {
+	fmt.Println("cash may be stolen")
+}
+
+func printInterfaceType(payWay interface{}) {
+	switch payWay.(type) {
+		case ContainUseFaceId:
+			fmt.Printf("%T can use faceId\n", payWay)
+		case ContainStolen:
+			fmt.Printf("%T may be stolen\n", payWay)
+	}
 }
