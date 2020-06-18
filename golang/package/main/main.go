@@ -7,6 +7,7 @@ import F "fmt"
 
 
 import "package/demo"
+import "package/count"
 
 func main() {
 	// 1	
@@ -22,4 +23,11 @@ func main() {
 	}
 	hero.Attack()
 	hero.Defend()
+
+	F.Println("2.sync包")
+	// 不加锁
+	count.Run()
+	// 加锁
+	count.SyncRun()
+
 }
