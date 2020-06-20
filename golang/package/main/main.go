@@ -10,6 +10,8 @@ import "package/demo"
 // 互斥锁
 //import "package/count"
 import "package/timebase"
+import "package/regexpbase"
+import "package/bigbase"
 
 func main() {
 	// 1	
@@ -35,7 +37,7 @@ func main() {
 	F.Println()
 
 	// time包
-	F.Println("3.时间包:")
+	F.Println("3.时间包")
 	timebase.CurrentTime()
 	timebase.TimeStamp()
 	timebase.Operate()
@@ -44,4 +46,14 @@ func main() {
 	timebase.TimeFormat()
 	timebase.ParseTime()
 	F.Println()
+
+	F.Println("4.正则表达式")
+	regexpbase.MatchStr()
+	regexpbase.MatchFloat()
+	regexpbase.MatchWebTag()
+	regexpbase.MatchAndReplace()
+
+	F.Println("5.超出int64的大数计算:")
+	bigbase.Uint64()
+	bigbase.CalculateFibonacci()
 }
