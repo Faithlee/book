@@ -7,7 +7,9 @@ import F "fmt"
 
 
 import "package/demo"
-import "package/count"
+// 互斥锁
+//import "package/count"
+import "package/timebase"
 
 func main() {
 	// 1	
@@ -25,9 +27,21 @@ func main() {
 	hero.Defend()
 
 	F.Println("2.sync包")
+	F.Println("sync.Mutex")
 	// 不加锁
-	count.Run()
+	//count.Run()
 	// 加锁
-	count.SyncRun()
+	//count.SyncRun()
+	F.Println()
 
+	// time包
+	F.Println("3.时间包:")
+	timebase.CurrentTime()
+	timebase.TimeStamp()
+	timebase.Operate()
+	// todo 定时器
+	//timebase.Ticker()
+	timebase.TimeFormat()
+	timebase.ParseTime()
+	F.Println()
 }
