@@ -12,6 +12,7 @@ import "package/demo"
 import "package/timebase"
 import "package/regexpbase"
 import "package/bigbase"
+import "package/osbase"
 
 func main() {
 	// 1	
@@ -56,4 +57,10 @@ func main() {
 	F.Println("5.超出int64的大数计算:")
 	bigbase.Uint64()
 	bigbase.CalculateFibonacci()
+
+	F.Println("6.os包")
+	osbase.Base()
+	osbase.Exec()
+	osbase.User()
+	osbase.Signal()
 }
