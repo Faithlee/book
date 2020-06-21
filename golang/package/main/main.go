@@ -13,6 +13,7 @@ import "package/timebase"
 import "package/regexpbase"
 import "package/bigbase"
 import "package/osbase"
+import "package/flagbase"
 
 func main() {
 	// 1	
@@ -62,5 +63,11 @@ func main() {
 	osbase.Base()
 	osbase.Exec()
 	osbase.User()
-	osbase.Signal()
+	//osbase.Signal()
+
+	F.Println("7.命令行参数解析")
+	//flagbase.BaseType()
+	//flagbase.BaseTypeVar()
+	//flagbase.Args()
+	flagbase.Define()
 }
