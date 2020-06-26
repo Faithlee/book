@@ -8,6 +8,13 @@ import (
 type S1 interface{}
 type S2 interface{}
 
+type Staff struct {
+	Name string `inject`
+	Company S1 `inject`
+	Level S2 `inject`
+	Age int `inject`
+}
+
 func main() {
 	// 创建实例
 	i := inject.New()
@@ -19,6 +26,17 @@ func main() {
 
 	// 反转调用
 	i.Invoke(Format)
+
+	// 对结构体注入
+	s := Staff{}
+	is := inject.New()
+	is.Map("Tim")
+	is.MapTo("alibaba", (*S1)(nil))
+	is.MapTo("T5", (*S2)(nil))
+	is.Map(28)
+	is.Apply(&s)
+
+	fmt.Printf("staff=%v\n", s)
 }
 
 func Format(name string, company S1, level S2, age int) {
