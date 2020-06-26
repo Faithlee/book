@@ -26,7 +26,9 @@ func main() {
 	fmt.Println()
 
 	// 修改值
-	pv.SetFloat(2.8)
+	f := 2.8
+	fmt.Println(f.(float32) )
+	pv.SetFloat(f)
 	fmt.Println("反射类型对象转换接口类型的值: ", pv.Interface())
 	fmt.Println("modify of x :", x)
 	fmt.Println()
